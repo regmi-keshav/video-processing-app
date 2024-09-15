@@ -1,5 +1,0 @@
-django
-djangorestframework
-psycopg2
-ffmpeg-python
-celery
