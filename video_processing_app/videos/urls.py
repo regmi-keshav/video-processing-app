@@ -1,11 +1,14 @@
 from django.urls import path
-from .views import VideoUploadView, VideoListView, SubtitleSearchView
+from .views import VideoListView, VideoCreateView, VideoDetailView, SubtitleListView, SearchSubtitleView
 
 urlpatterns = [
-    # Upload video and process subtitles
-    path('upload/', VideoUploadView.as_view(), name='upload-video'),
-    # List all uploaded videos
-    path('', VideoListView.as_view(), name='list-videos'),
-    path('<int:video_id>/search/', SubtitleSearchView.as_view(),
-         name='search-subtitles'),  # Search for subtitles within a video
+    path('videos/', VideoListView.as_view(),
+         name='video-list'),  # List all videos
+    path('upload/', VideoCreateView.as_view(),
+         name='video-create'),  # Upload a new video
+    path('videos/<int:pk>/', VideoDetailView.as_view(), name='video-detail'),
+    path('videos/<int:video_id>/subtitles/',
+         SubtitleListView.as_view(), name='video-subtitles-list'),
+    path('videos/<int:video_id>/subtitles/search/',
+         SearchSubtitleView.as_view(), name='video-subtitles-search'),
 ]
