@@ -8,40 +8,43 @@
   </head>
   <body>
     <header>
-      <div class="container">
-        <h1>Video Processing Application</h1>
-      </div>
+      <h1>Video Processing Application</h1>
     </header>
 
     <main>
-      <div class="container">
-        <section id="upload-section">
-          <h2>Upload Video</h2>
-          <form id="upload-form" enctype="multipart/form-data">
-            <input type="file" name="video_file" accept="video/*" required />
-            <button type="submit">Upload Video</button>
-          </form>
-        </section>
+      <!-- Upload Video Section -->
+      <section id="upload-section">
+        <h2>Upload Video</h2>
+        <form id="upload-form" enctype="multipart/form-data">
+          <input type="file" name="video_file" accept="video/*" required />
+          <button type="submit">Upload Video</button>
+        </form>
+      </section>
 
-        <section id="search-section">
-          <h2>Search Subtitles</h2>
-          <input
-            type="text"
-            id="search-query"
-            placeholder="Enter phrase to search"
-          />
-          <button id="search-button">Search</button>
-          <div id="results"></div>
-        </section>
+      <!-- List of Uploaded Videos -->
+      <section id="video-list-section">
+        <h2>Uploaded Videos</h2>
+        <div id="video-list"></div>
+      </section>
 
-        <section id="video-section">
-          <h2>Video Player</h2>
-          <video controls>
-            <source src="" type="video/mp4" />
-            Your browser does not support the video tag.
-          </video>
-        </section>
-      </div>
+      <!-- Video Player -->
+      <section id="video-section">
+        <h2>Video Player</h2>
+        <video controls>
+          <source id="video-source" src="" type="video/mp4" />
+          Your browser does not support the video tag.
+        </video>
+        <track id="subtitle-track" label="English" kind="subtitles" srclang="en" src="">
+        </track>
+      </section>
+
+      <!-- Search Section -->
+      <section id="search-section">
+        <h2>Search Subtitles</h2>
+        <input type="text" id="search-query" placeholder="Search subtitles..." />
+        <button id="search-button">Search</button>
+        <div id="search-results"></div>
+      </section>
     </main>
 
     <script src="/static/video_player.js"></script>
