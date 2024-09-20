@@ -16,6 +16,7 @@
       <section id="upload-section">
         <h2>Upload Video</h2>
         <form id="upload-form" enctype="multipart/form-data">
+          <input type="text" name="title" placeholder="Video Title" required />
           <input type="file" name="video_file" accept="video/*" required />
           <button type="submit">Upload Video</button>
         </form>
@@ -30,18 +31,20 @@
       <!-- Video Player -->
       <section id="video-section">
         <h2>Video Player</h2>
-        <video controls>
+        <video id="video-player" controls>
           <source id="video-source" src="" type="video/mp4" />
           Your browser does not support the video tag.
         </video>
-        <track id="subtitle-track" label="English" kind="subtitles" srclang="en" src="">
-        </track>
       </section>
 
       <!-- Search Section -->
       <section id="search-section">
         <h2>Search Subtitles</h2>
-        <input type="text" id="search-query" placeholder="Search subtitles..." />
+        <input
+          type="text"
+          id="search-query"
+          placeholder="Search subtitles..."
+        />
         <button id="search-button">Search</button>
         <div id="search-results"></div>
       </section>
