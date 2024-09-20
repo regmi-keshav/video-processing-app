@@ -204,19 +204,7 @@ services:
 
   celery:
     build: .
-    command: celery -A video_processing_app worker -l info
-    volumes:
-      - .:/app
-    depends_on:
-      - redis
-      - db
-    environment:
-      - CELERY_BROKER_URL=redis://redis:6379/0
-      - CELERY_RESULT_BACKEND=redis://redis:6379/0
-
-  celery-beat:
-    build: .
-    command: celery -A video_processing_app beat -l info
+    command: celery -A video_processing_app worker --loglevel=info
     volumes:
       - .:/app
     depends_on:
