@@ -13,7 +13,7 @@ class SubtitleSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Subtitle
-        fields = ['id', 'language', 'content',
+        fields = ['id', 'language', 'content', 'video_id',
                   'timestamp_start', 'timestamp_end']
 
 
