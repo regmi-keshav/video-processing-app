@@ -41,25 +41,16 @@ def get_subtitle_info(video_path):
         '-of', 'json', video_path
     ]
     result = subprocess.run(
-        ffprobe_cmd, capture_output=True, text=True, check=True)
-    return json.loads(result.stdout)
-
-
-def get_hardcoded_subtitle_info():
-    """Return hardcoded subtitle stream information."""
-    return [
-        {'index': 0, 'codec_type': 'subtitle', 'tags': {'language': 'en'}},
-        {'index': 1, 'codec_type': 'subtitle', 'tags': {'language': 'ru'}},
-        {'index': 2, 'codec_type': 'subtitle', 'tags': {
-            'language': 'ja'}},  # No language tag
-    ]
+        ffprobe_cmd, capture_output=True, text=True, check=True
+    )
+    return json.loads(result.stdout)['streams']
 
 
 def extract_subtitle_stream(video_path, subtitle_index, subtitle_language):
     """Extract a specific subtitle stream from the video in VTT format."""
     subtitle_path = f"{video_path}_stream_{subtitle_language}.vtt"
     ffmpeg_cmd = [
-        'ffmpeg', '-i', video_path, '-map', f'0:s:{subtitle_index}', subtitle_path, '-y'
+        'ffmpeg', '-i', video_path, '-map', f'0:{subtitle_index}', subtitle_path, '-y'
     ]
     subprocess.run(ffmpeg_cmd, check=True)
     return subtitle_path
@@ -110,11 +101,8 @@ def extract_subtitles_task(video_id):
         video = Video.objects.get(id=video_id)
         video_path = video.video_file.path
 
-        # Uncomment this line to use ffprobe
-        # subtitles_info = get_subtitle_info(video_path)
-
-        # Use hardcoded subtitles as a fallback
-        subtitles_info = get_hardcoded_subtitle_info()
+        # Retrieve subtitle stream information
+        subtitles_info = get_subtitle_info(video_path)
 
         subtitles_to_create = []
 
@@ -123,6 +111,7 @@ def extract_subtitles_task(video_id):
                 language_code = stream['tags'].get('language', 'x-unknown')
                 language = get_language(language_code)
 
+                # Construct subtitle file path
                 subtitle_path = f"{video_path}_stream_{language_code}.vtt"
 
                 # Check if the subtitle file already exists
@@ -131,11 +120,14 @@ def extract_subtitles_task(video_id):
                         f"Subtitle file already exists: {subtitle_path}. Skipping extraction for {language_code}.")
                     continue
 
+                # Extract the subtitle stream
                 subtitle_path = extract_subtitle_stream(
                     video_path, stream['index'], language_code)
                 subtitles_to_create.extend(
-                    parse_subtitles(subtitle_path, video, language))
+                    parse_subtitles(subtitle_path, video, language)
+                )
 
+        # Bulk create subtitle instances
         Subtitle.objects.bulk_create(subtitles_to_create)
 
     except Video.DoesNotExist:
